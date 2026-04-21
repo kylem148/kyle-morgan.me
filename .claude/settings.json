@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(mkdir -p /tmp/design-extract)",
+      "Read(//tmp/**)",
+      "Bash(cp \"/Users/kylemorgan/.claude/projects/-Users-kylemorgan-Documents-Computer-Science-Website-Development-testing-pwebsite/297e2be8-9a03-4fc8-95ee-6f9ca833162b/tool-results/webfetch-1776804614531-ckf7jw.bin\" ./design.tar.gz)",
+      "Bash(tar -xzf design.tar.gz)",
+      "Read(//private/tmp/design-extract/testing/**)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(rm -rf .next)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(echo \"started $!\")",
+      "Read(//private/tmp/**)",
+      "Bash(break)"
+    ]
+  }
+}
