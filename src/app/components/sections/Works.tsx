@@ -16,8 +16,9 @@ export default function Works({ hoverIdRef }: Props) {
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
   const handleEnter = useCallback(
-    (p: Project) => {
+    (p: Project, pos?: { x: number; y: number }) => {
       hoverIdRef.current = p.graphId;
+      if (pos) setCursor(pos);
       setHoverProject(p);
     },
     [hoverIdRef],

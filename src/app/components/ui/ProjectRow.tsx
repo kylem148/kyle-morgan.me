@@ -6,7 +6,7 @@ import type { Project } from "@/content/projects";
 type Props = {
   project: Project;
   active: boolean;
-  onEnter: (p: Project) => void;
+  onEnter: (p: Project, pos?: { x: number; y: number }) => void;
   onLeave: () => void;
 };
 
@@ -19,7 +19,9 @@ export default function ProjectRow({ project, active, onEnter, onLeave }: Props)
       href={project.link}
       target={project.link.startsWith("http") ? "_blank" : undefined}
       rel={project.link.startsWith("http") ? "noopener noreferrer" : undefined}
-      onPointerEnter={() => onEnter(project)}
+      onPointerEnter={(e) =>
+        onEnter(project, { x: e.clientX, y: e.clientY })
+      }
       onPointerLeave={onLeave}
       onFocus={() => onEnter(project)}
       onBlur={onLeave}
