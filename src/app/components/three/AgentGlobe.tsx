@@ -7,6 +7,9 @@ import { AGENTS, MANAGER, AGENT_EDGES, type Agent } from "@/content/agents";
 type Props = {
   /** id of the node to highlight. Parent owns auto-cycle vs user-hover logic. */
   focusId: string | null;
+  /** true while a user hover drives focus; false for idle auto-cycle. Speeds up
+   *  transitions so hover feels responsive while idle stays contemplative. */
+  hoverActive: boolean;
   /** fires when the user hovers a sphere; null when they leave or hit empty space. */
   onHoverChange: (agent: Agent | null) => void;
 };
@@ -14,16 +17,24 @@ type Props = {
 const ACCENT = new THREE.Color(0xd46a3a);
 const MUTED = new THREE.Color(0x8a8479);
 
-export default function AgentGlobe({ focusId, onHoverChange }: Props) {
+export default function AgentGlobe({
+  focusId,
+  hoverActive,
+  onHoverChange,
+}: Props) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   // Keep the latest external values in refs so the scene isn't rebuilt on
   // each prop change.
   const focusIdRef = useRef(focusId);
+  const hoverActiveRef = useRef(hoverActive);
   const onHoverRef = useRef(onHoverChange);
   useEffect(() => {
     focusIdRef.current = focusId;
   }, [focusId]);
+  useEffect(() => {
+    hoverActiveRef.current = hoverActive;
+  }, [hoverActive]);
   useEffect(() => {
     onHoverRef.current = onHoverChange;
   }, [onHoverChange]);
@@ -153,9 +164,11 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
     let raf = 0;
     const t0 = performance.now();
     let lastFrame = t0;
-    // Time (seconds) for a node to travel 0 → 1 highlight. Slower = more
-    // contemplative. Smootherstep eases both ends so it feels GSAP-ish.
-    const TRANSITION_SEC = 1.4;
+    // Transition time (seconds) for a node's 0 → 1 highlight. Hover is quick
+    // so interaction feels immediate; idle stays slow and contemplative.
+    // Smootherstep eases both ends so it feels GSAP-ish.
+    const TRANSITION_HOVER_SEC = 0.35;
+    const TRANSITION_IDLE_SEC = 1.4;
 
     const render = () => {
       const now = performance.now();
@@ -167,7 +180,10 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
       group.rotation.x = Math.sin(t * 0.04) * 0.1;
 
       const focused = focusIdRef.current;
-      const step = dt / TRANSITION_SEC;
+      const transitionSec = hoverActiveRef.current
+        ? TRANSITION_HOVER_SEC
+        : TRANSITION_IDLE_SEC;
+      const step = dt / transitionSec;
 
       for (const n of nodes) {
         const wob = 0.03;
