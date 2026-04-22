@@ -24,7 +24,7 @@ export default function CurrentFocus() {
         className="grid grid-cols-12 border-t border-[#0f0e0c] bg-[#f2efe8]"
       >
         <SectionRail label="§ 03 — Current Focus" />
-        <div className="col-span-12 md:col-span-5 border-r border-[#0f0e0c] px-6 md:px-8 py-14 md:py-20">
+        <div className="col-span-12 md:col-span-5 border-r border-[#0f0e0c] flex flex-col justify-center px-6 md:px-8 py-10">
           <div className="mb-6 text-[11px] uppercase tracking-[0.15em] opacity-60">
             Agent architecture
           </div>
@@ -35,11 +35,11 @@ export default function CurrentFocus() {
             <em className="italic">Checkers</em> validate.
           </p>
         </div>
-        <div className="col-span-12 md:col-span-6 flex flex-col items-center justify-center gap-4 p-4">
-          <p className="w-full text-[14px] italic leading-[1.5] opacity-60">
-            Each node carries a thought. Hover to read.
+        <div className="col-span-12 md:col-span-6 flex flex-col items-center justify-start gap-3 px-4 pt-4 pb-2">
+          <p className="w-full max-w-[720px] text-[14px] italic leading-[1.5] opacity-60">
+            Notes from projects. Hover a node.
           </p>
-          <div className="relative aspect-square w-full">
+          <div className="relative aspect-square w-full max-w-[720px] -my-[8%]">
             <AgentGlobe focusId={hover?.id ?? null} onHoverChange={setHover} />
           </div>
         </div>

@@ -38,7 +38,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 50);
-    camera.position.set(0, 0, 6);
+    camera.position.set(0, 0, 4.3);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
@@ -56,7 +56,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
 
     // Manager at origin; agents on a Fibonacci sphere shell.
     const allNodes: Agent[] = [MANAGER, ...AGENTS];
-    const shellRadius = 1.0;
+    const shellRadius = 0.9;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     const basePositions: Record<string, THREE.Vector3> = {
       [MANAGER.id]: new THREE.Vector3(0, 0, 0),
@@ -69,7 +69,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
       basePositions[agent.id] = new THREE.Vector3(
         Math.cos(phi) * rAtY * shellRadius,
         y * shellRadius,
-        Math.sin(phi) * rAtY * shellRadius,
+        Math.sin(phi) * rAtY * shellRadius
       );
     });
 
@@ -107,7 +107,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
     const edgeGeom = new THREE.BufferGeometry();
     edgeGeom.setAttribute(
       "position",
-      new THREE.BufferAttribute(edgePositions, 3),
+      new THREE.BufferAttribute(edgePositions, 3)
     );
     const edgeMat = new THREE.LineBasicMaterial({
       color: 0x0f0e0c,
@@ -164,10 +164,9 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
         n.mesh.position.set(
           n.base.x + Math.sin(t * 0.6 + n.phase) * wob,
           n.base.y + Math.cos(t * 0.5 + n.phase) * wob,
-          n.base.z + Math.sin(t * 0.4 + n.phase * 1.3) * wob,
+          n.base.z + Math.sin(t * 0.4 + n.phase * 1.3) * wob
         );
-        const target =
-          focused === n.agent.id ? ACCENT : focused ? MUTED : INK;
+        const target = focused === n.agent.id ? ACCENT : focused ? MUTED : INK;
         n.material.color.lerp(target, 0.12);
       }
 
@@ -175,7 +174,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
         const [a, b] = AGENT_EDGES[k];
         const na = nodeById.get(a)!.mesh;
         const nb = nodeById.get(b)!.mesh;
-        edgePositions[k * 6]     = na.position.x;
+        edgePositions[k * 6] = na.position.x;
         edgePositions[k * 6 + 1] = na.position.y;
         edgePositions[k * 6 + 2] = na.position.z;
         edgePositions[k * 6 + 3] = nb.position.x;

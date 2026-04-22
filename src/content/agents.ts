@@ -8,38 +8,39 @@ export const MANAGER: Agent = {
   id: "manager",
   label: "Manager",
   thought:
-    "Reasons, doesn't execute. Full delegation authority, zero tool access.",
+    "Orchestrator-worker pattern. Reasoning lives here, execution doesn't. V1 let the brain touch tools and it showed.",
 };
 
 export const AGENTS: Agent[] = [
   {
     id: "worker",
     label: "Worker",
-    thought: "One job, one permission set, one reason to exist.",
+    thought:
+      "Narrow scope, narrow permissions. Blast radius is capped by what this agent is allowed to touch, not by what it decides to do.",
   },
   {
     id: "security",
     label: "Security",
     thought:
-      "Hardcoded boundary. The one part of the system that can't be talked out of its job.",
+      "The lethal trifecta problem. Prompt injection can't be reasoned away, so enforcement lives in code, not in a prompt.",
   },
   {
     id: "checker",
     label: "Action Checker",
     thought:
-      "Last gate before the real world. Reasoning is cheap; execution is permanent.",
+      "Deterministic gate before any real-world action. Reasoning is cheap, execution is permanent, and tool output is the new attack surface.",
   },
   {
     id: "memory",
     label: "Memory",
     thought:
-      "Defaults plus overrides. Every behavior is a starting point, not a rule.",
+      "Defaults plus overrides. Still working out where user control ends and poisoned context begins.",
   },
   {
     id: "queue",
     label: "Queue",
     thought:
-      "One event at a time. Sequential first; concurrent only when it's earned.",
+      "Sequential first. Concurrency gets earned once tracing and failure modes are solid, not before.",
   },
 ];
 
