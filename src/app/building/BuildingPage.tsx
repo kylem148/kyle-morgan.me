@@ -22,7 +22,7 @@ export default function BuildingPage() {
             Building
           </h1>
           <Link
-            href="/"
+            href="/#focus"
             className="whitespace-nowrap text-[11px] uppercase tracking-[0.2em] underline underline-offset-4 hover:opacity-70"
           >
             ← Back
