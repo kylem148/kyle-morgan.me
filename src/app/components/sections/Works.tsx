@@ -70,7 +70,10 @@ export default function Works({ hoverIdRef }: Props) {
           style={{
             left: cursor.x,
             top: cursor.y,
-            transform: "translate(24px, -50%)",
+            transform:
+              cursor.x + 320 > window.innerWidth
+                ? "translate(calc(-100% - 24px), -50%)"
+                : "translate(24px, -50%)",
           }}
         >
           <ProjectPoster project={hoverProject} />

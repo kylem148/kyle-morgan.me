@@ -52,7 +52,10 @@ export default function CurrentFocus() {
           style={{
             left: cursor.x,
             top: cursor.y,
-            transform: "translate(24px, -50%)",
+            transform:
+              cursor.x + 250 > window.innerWidth
+                ? "translate(calc(-100% - 24px), -50%)"
+                : "translate(24px, -50%)",
           }}
         >
           <div className="w-[260px] rounded-sm bg-[#0f0e0c] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">

@@ -8,7 +8,7 @@ export const MANAGER: Agent = {
   id: "manager",
   label: "Manager",
   thought:
-    "Orchestrator-worker pattern. Reasoning lives here, execution doesn't. V1 let the brain touch tools and it showed.",
+    "Orchestrator-worker pattern. Reasoning lives here, execution doesn't. Keeping the brain away from tools makes the whole system easier to trust.",
 };
 
 export const AGENTS: Agent[] = [
