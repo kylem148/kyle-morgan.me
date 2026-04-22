@@ -29,8 +29,8 @@ export default function BuildingPage() {
           </Link>
         </div>
         <p className="mt-6 max-w-3xl text-[clamp(18px,2vw,26px)] italic leading-[1.4] opacity-75">
-          Honest progress reports from agentic projects I&rsquo;m shipping
-          right now. Rough edges included.
+          A live log of the agentic systems I&rsquo;m building, straight from
+          the workbench.
         </p>
       </section>
 

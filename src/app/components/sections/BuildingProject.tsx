@@ -26,12 +26,13 @@ export default function BuildingProject({ project, index }: Props) {
           <div className="col-span-12 md:col-span-8 space-y-9">
             <TextBlock label="Why" text={project.why} />
             <TextBlock label="Current state" text={project.currentState} />
-            <TextBlock label="Rough edges" text={project.knownRough} />
             <TextBlock label="Next" text={project.next} />
-            <TextBlock
-              label="Notable decision"
-              text={project.notableDecision}
-            />
+            {project.notableDecision && (
+              <TextBlock
+                label="Notable decision"
+                text={project.notableDecision}
+              />
+            )}
           </div>
           <aside className="col-span-12 md:col-span-3 md:col-start-10 space-y-8 text-sm">
             <MetaBlock label="Stack">
@@ -43,11 +44,6 @@ export default function BuildingProject({ project, index }: Props) {
                   </li>
                 ))}
               </ul>
-            </MetaBlock>
-            <MetaBlock label="Timeline">
-              <p className="italic leading-[1.5] opacity-75">
-                {project.timeline}
-              </p>
             </MetaBlock>
             {hasLinks && (
               <MetaBlock label="Links">
