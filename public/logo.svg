@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 200 200"
+     width="200" height="200"
+     role="img"
+     aria-labelledby="title desc">
+  <title id="title">KM logo</title>
+  <desc id="desc">Bold white letters K M centered on a black square background</desc>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#000"/>
+
+  <!-- Text: bold, centered -->
+  <text x="50%" y="50%"
+        fill="#ffffff"
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="700"
+        font-size="110"
+        text-anchor="middle"
+        dominant-baseline="central"
+        style="letter-spacing: -3px;">
+    KM
+  </text>
+</svg>
