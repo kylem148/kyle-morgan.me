@@ -1,6 +1,19 @@
 import SectionRail from "../ui/SectionRail";
 
-const STACK = ["TypeScript", "React", "Next", "Node", "Mongo", "Unity"];
+const NOW = [
+  {
+    tag: "Reading",
+    body: "Recent writing on agent architectures — where reasoning belongs vs. where execution lives.",
+  },
+  {
+    tag: "Building",
+    body: "Multi-agent systems with guardrails in code, not prompts.",
+  },
+  {
+    tag: "Playing",
+    body: "Drums. Chasing the way a steady pocket holds everything else together — same instinct that makes good systems.",
+  },
+];
 
 export default function Bio() {
   return (
@@ -16,14 +29,21 @@ export default function Bio() {
         secure.
       </div>
       <div className="col-span-12 md:col-span-4 px-6 md:px-8 py-10 md:py-16 text-sm">
-        <div className="mb-4 text-[11px] uppercase tracking-[0.15em] opacity-60">
-          Stack
+        <div className="mb-6 flex items-baseline justify-between">
+          <span className="text-[11px] uppercase tracking-[0.15em] opacity-60">
+            Now
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.15em] opacity-40">
+            Apr 2026
+          </span>
         </div>
-        <ul className="grid grid-cols-2 gap-y-2">
-          {STACK.map((s) => (
-            <li key={s} className="flex items-center gap-2">
-              <span className="h-[2px] w-3 bg-[#0f0e0c]" />
-              {s}
+        <ul className="space-y-5">
+          {NOW.map((item) => (
+            <li key={item.tag}>
+              <div className="text-[10px] uppercase tracking-[0.2em] opacity-60">
+                {item.tag}
+              </div>
+              <div className="mt-1 leading-[1.45]">{item.body}</div>
             </li>
           ))}
         </ul>

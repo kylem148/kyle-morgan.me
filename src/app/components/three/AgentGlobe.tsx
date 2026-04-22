@@ -11,7 +11,6 @@ type Props = {
   onHoverChange: (agent: Agent | null) => void;
 };
 
-const INK = new THREE.Color(0x0f0e0c);
 const ACCENT = new THREE.Color(0xd46a3a);
 const MUTED = new THREE.Color(0x8a8479);
 
@@ -79,13 +78,15 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
       agent: Agent;
       base: THREE.Vector3;
       phase: number;
+      // 0 = fully MUTED, 1 = fully ACCENT. Eased per-frame toward target.
+      highlight: number;
     };
 
     const nodes: NodeRecord[] = allNodes.map((agent) => {
       const r = agent.id === MANAGER.id ? 0.22 : 0.13;
       const geom = new THREE.SphereGeometry(r, 24, 24);
       const material = new THREE.MeshStandardMaterial({
-        color: INK.clone(),
+        color: MUTED.clone(),
         metalness: 0.2,
         roughness: 0.55,
       });
@@ -98,6 +99,7 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
         agent,
         base: basePositions[agent.id].clone(),
         phase: Math.random() * Math.PI * 2,
+        highlight: 0,
       };
     });
 
@@ -150,14 +152,22 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
 
     let raf = 0;
     const t0 = performance.now();
+    let lastFrame = t0;
+    // Time (seconds) for a node to travel 0 → 1 highlight. Slower = more
+    // contemplative. Smootherstep eases both ends so it feels GSAP-ish.
+    const TRANSITION_SEC = 1.4;
 
     const render = () => {
-      const t = (performance.now() - t0) / 1000;
+      const now = performance.now();
+      const t = (now - t0) / 1000;
+      const dt = Math.min(0.1, (now - lastFrame) / 1000);
+      lastFrame = now;
 
       group.rotation.y = t * 0.08;
       group.rotation.x = Math.sin(t * 0.04) * 0.1;
 
       const focused = focusIdRef.current;
+      const step = dt / TRANSITION_SEC;
 
       for (const n of nodes) {
         const wob = 0.03;
@@ -166,8 +176,17 @@ export default function AgentGlobe({ focusId, onHoverChange }: Props) {
           n.base.y + Math.cos(t * 0.5 + n.phase) * wob,
           n.base.z + Math.sin(t * 0.4 + n.phase * 1.3) * wob
         );
-        const target = focused === n.agent.id ? ACCENT : focused ? MUTED : INK;
-        n.material.color.lerp(target, 0.12);
+        const target = focused === n.agent.id ? 1 : 0;
+        if (n.highlight < target) {
+          n.highlight = Math.min(target, n.highlight + step);
+        } else if (n.highlight > target) {
+          n.highlight = Math.max(target, n.highlight - step);
+        }
+        // Smootherstep: 6x^5 - 15x^4 + 10x^3 (zero 1st/2nd derivatives at ends)
+        const x = n.highlight;
+        const eased = x * x * x * (x * (x * 6 - 15) + 10);
+        n.material.color.copy(MUTED).lerp(ACCENT, eased);
+        n.mesh.scale.setScalar(1 + 0.18 * eased);
       }
 
       for (let k = 0; k < AGENT_EDGES.length; k++) {

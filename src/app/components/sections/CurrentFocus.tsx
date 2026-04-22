@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import SectionRail from "../ui/SectionRail";
 import AgentGlobe from "../three/AgentGlobe";
-import type { Agent } from "@/content/agents";
+import { AGENTS, type Agent } from "@/content/agents";
 
 export default function CurrentFocus() {
   const [hover, setHover] = useState<Agent | null>(null);
+  const [idleId, setIdleId] = useState<string | null>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -16,6 +17,30 @@ export default function CurrentFocus() {
       setCursor({ x: e.clientX, y: e.clientY });
     window.addEventListener("pointermove", onMove);
     return () => window.removeEventListener("pointermove", onMove);
+  }, [hover]);
+
+  // Idle pulse: while nothing is hovered, cycle the red highlight through
+  // agents so the globe reads as interactive without a card appearing.
+  // On hover-start we clear the idle focus so the eventual de-hover fades
+  // through an all-neutral beat before the next idle node lights up.
+  useEffect(() => {
+    if (hover) {
+      const clear = setTimeout(() => setIdleId(null), 0);
+      return () => clearTimeout(clear);
+    }
+    const ids = AGENTS.map((a) => a.id);
+    const pick = (current: string | null) => {
+      const pool = current ? ids.filter((id) => id !== current) : ids;
+      return pool[Math.floor(Math.random() * pool.length)];
+    };
+    const initial = setTimeout(() => setIdleId((cur) => pick(cur)), 1000);
+    const interval = setInterval(() => {
+      setIdleId((cur) => pick(cur));
+    }, 2500);
+    return () => {
+      clearTimeout(initial);
+      clearInterval(interval);
+    };
   }, [hover]);
 
   return (
@@ -47,7 +72,7 @@ export default function CurrentFocus() {
             Notes from projects. Hover a node.
           </p>
           <div className="relative aspect-square w-full max-w-[720px] -my-[8%]">
-            <AgentGlobe focusId={hover?.id ?? null} onHoverChange={setHover} />
+            <AgentGlobe focusId={hover?.id ?? idleId} onHoverChange={setHover} />
           </div>
         </div>
       </section>
