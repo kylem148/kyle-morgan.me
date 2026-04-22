@@ -18,7 +18,7 @@ export default function BuildingPage() {
 
       <section className="border-b border-[#0f0e0c] px-6 md:px-10 py-16 md:py-24">
         <div className="flex items-baseline justify-between gap-6">
-          <h1 className="font-black uppercase tracking-[-0.05em] leading-[0.9] text-[clamp(72px,13vw,200px)]">
+          <h1 className="font-semibold uppercase tracking-[-0.03em] leading-[0.9] text-[clamp(56px,10vw,140px)]">
             Building
           </h1>
           <Link

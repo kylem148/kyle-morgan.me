@@ -55,7 +55,7 @@ export default function CurrentFocus() {
             Agent architecture
           </div>
           <p className="text-[clamp(20px,2.2vw,30px)] leading-[1.3] tracking-[-0.01em]">
-            Exploring how multi-agent systems should be structured.{" "}
+            Currently exploring how multi-agent systems should be structured.{" "}
             <em className="italic">Managers</em> reason.{" "}
             <em className="italic">Workers</em> act.{" "}
             <em className="italic">Checkers</em> validate.

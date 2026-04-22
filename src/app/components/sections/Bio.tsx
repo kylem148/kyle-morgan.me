@@ -1,19 +1,6 @@
 import SectionRail from "../ui/SectionRail";
 
-const NOW = [
-  {
-    tag: "Reading",
-    body: "Recent writing on agent architectures — where reasoning belongs vs. where execution lives.",
-  },
-  {
-    tag: "Building",
-    body: "Multi-agent systems with guardrails in code, not prompts.",
-  },
-  {
-    tag: "Playing",
-    body: "Drums. Chasing the way a steady pocket holds everything else together — same instinct that makes good systems.",
-  },
-];
+const STACK = ["Web", "Games", "Scripts", "Systems", "Agents", "3D"];
 
 export default function Bio() {
   return (
@@ -28,22 +15,19 @@ export default function Bio() {
         <em className="italic">purposefully engineered</em>, user-focused, and
         secure.
       </div>
-      <div className="col-span-12 md:col-span-4 px-6 md:px-8 py-10 md:py-16 text-sm">
-        <div className="mb-6 flex items-baseline justify-between">
-          <span className="text-[11px] uppercase tracking-[0.15em] opacity-60">
-            Now
-          </span>
-          <span className="text-[11px] uppercase tracking-[0.15em] opacity-40">
-            Apr 2026
-          </span>
+      <div className="col-span-12 md:col-span-4 px-6 md:px-8 py-10 md:py-16">
+        <div className="mb-5 text-[11px] uppercase tracking-[0.15em] opacity-60">
+          Stack
         </div>
-        <ul className="space-y-5">
-          {NOW.map((item) => (
-            <li key={item.tag}>
-              <div className="text-[10px] uppercase tracking-[0.2em] opacity-60">
-                {item.tag}
-              </div>
-              <div className="mt-1 leading-[1.45]">{item.body}</div>
+        <ul className="divide-y divide-[#0f0e0c]/15 border-t border-[#0f0e0c]/15">
+          {STACK.map((s, i) => (
+            <li key={s} className="flex items-baseline gap-4 py-2.5">
+              <span className="text-[10px] tabular-nums uppercase tracking-[0.2em] opacity-40">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="text-[clamp(16px,1.4vw,22px)] tracking-[-0.01em]">
+                {s}
+              </span>
             </li>
           ))}
         </ul>
