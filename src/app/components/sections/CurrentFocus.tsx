@@ -72,7 +72,11 @@ export default function CurrentFocus() {
             Notes from projects. Hover a node.
           </p>
           <div className="relative aspect-square w-full max-w-[720px] -my-[8%]">
-            <AgentGlobe focusId={hover?.id ?? idleId} onHoverChange={setHover} />
+            <AgentGlobe
+              focusId={hover?.id ?? idleId}
+              hoverActive={hover !== null}
+              onHoverChange={setHover}
+            />
           </div>
         </div>
       </section>
