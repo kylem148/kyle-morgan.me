@@ -1,4 +1,5 @@
 import Link from "next/link";
+import MobileNav from "./MobileNav";
 
 type Props = {
   progress: number;
@@ -30,9 +31,10 @@ export default function Header({ progress, clock }: Props) {
           </Link>
         ))}
       </nav>
-      <span className="tabular-nums tracking-[0.05em]">
+      <span className="hidden md:inline tabular-nums tracking-[0.05em]">
         {(progress * 100).toFixed(0)}% · {clock || "—"}
       </span>
+      <MobileNav />
     </header>
   );
 }

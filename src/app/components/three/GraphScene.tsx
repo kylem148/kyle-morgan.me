@@ -333,13 +333,7 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     <div
       ref={mountRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0"
-      style={{
-        WebkitMaskImage:
-          "linear-gradient(to bottom, #000 0%, #000 40%, rgba(0,0,0,0.25) 65%, transparent 80%)",
-        maskImage:
-          "linear-gradient(to bottom, #000 0%, #000 40%, rgba(0,0,0,0.25) 65%, transparent 80%)",
-      }}
+      className="graph-mask pointer-events-none fixed left-0 right-0 bottom-0 top-[42vh] md:top-0 z-0"
     />
   );
 }

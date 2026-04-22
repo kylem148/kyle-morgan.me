@@ -46,10 +46,10 @@ export default function Works({ hoverIdRef }: Props) {
       >
         <SectionRail label="§ 02 — Works" />
         <div className="col-span-11 p-6">
-          <div className="grid grid-cols-[1fr_3fr_2fr_2fr] gap-4 border-b border-[#0f0e0c] py-3 text-[11px] uppercase tracking-[0.1em]">
+          <div className="hidden md:grid grid-cols-[1fr_3fr_2fr_2fr] gap-4 border-b border-[#0f0e0c] py-3 text-[11px] uppercase tracking-[0.1em]">
             <div>Index</div>
             <div>Project</div>
-            <div className="hidden sm:block">Category</div>
+            <div>Category</div>
             <div className="text-right">Link</div>
           </div>
           {PROJECTS.map((p) => (
