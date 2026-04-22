@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import SectionRail from "../ui/SectionRail";
 import AgentGlobe from "../three/AgentGlobe";
@@ -34,6 +35,12 @@ export default function CurrentFocus() {
             <em className="italic">Workers</em> act.{" "}
             <em className="italic">Checkers</em> validate.
           </p>
+          <Link
+            href="/building"
+            className="mt-8 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.2em] underline underline-offset-[5px] hover:opacity-70"
+          >
+            See what I&rsquo;m building <span aria-hidden="true">↗</span>
+          </Link>
         </div>
         <div className="col-span-12 md:col-span-6 flex flex-col items-center justify-start gap-3 px-4 pt-4 pb-2">
           <p className="w-full max-w-[720px] text-[14px] italic leading-[1.5] opacity-60">
