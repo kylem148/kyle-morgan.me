@@ -221,9 +221,9 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     // Cinematic intro: opacity-only ripple from the hub outward. Positions
     // settle via the normal physics; nodes farther from Kyle just fade in later.
     const introDelay = new Float32Array(N);
-    const introDuration = 1.1;
-    const introSpread = 0.8;
-    const introHold = 0.9; // delay before any node fades in — lets hero text breathe
+    const introDuration = 1.3;
+    const introSpread = 1.1;
+    const introHold = 0.5; // hub blooms just after the hero text settles
     const introTotal = introHold + introDuration + introSpread;
 
     const hubX = pos[hubIdx * 3];
