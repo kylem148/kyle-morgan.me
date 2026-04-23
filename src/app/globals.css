@@ -79,6 +79,7 @@ body {
   animation: hero-sub-in 1600ms cubic-bezier(0.19, 1, 0.22, 1) 900ms forwards;
 }
 
+
 .graph-mask {
   -webkit-mask-image: linear-gradient(
     to bottom,

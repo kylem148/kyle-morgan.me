@@ -1,3 +1,5 @@
+import ScrollCue from "../ui/ScrollCue";
+
 export default function Hero() {
   return (
     <section className="relative flex min-h-[calc(100svh-34px)] flex-col justify-start pt-[14vh] pb-16 px-6 md:justify-end md:pt-[26vh]">
@@ -10,6 +12,7 @@ export default function Hero() {
         <br className="md:hidden" />
         <span>San Luis Obispo · CA</span>
       </div>
+      <ScrollCue />
     </section>
   );
 }
