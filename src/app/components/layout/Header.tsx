@@ -32,7 +32,7 @@ export default function Header({ progress, clock }: Props) {
         ))}
       </nav>
       <span className="hidden md:inline tabular-nums tracking-[0.05em]">
-        {(progress * 100).toFixed(0)}% · {clock || "—"}
+        {(progress * 100).toFixed(0)}% · {clock ? `${clock} PT` : "—"}
       </span>
       <MobileNav />
     </header>

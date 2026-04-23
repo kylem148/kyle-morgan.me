@@ -15,7 +15,7 @@ export default function BuildingProject({ project, index }: Props) {
     <section className="grid grid-cols-12 border-t border-[#0f0e0c] bg-[#f2efe8]">
       <SectionRail label={label} />
       <div className="col-span-11 px-6 md:px-10 py-14 md:py-20">
-        <h2 className="font-black uppercase tracking-[-0.04em] leading-[0.95] text-[clamp(40px,6vw,80px)]">
+        <h2 className="font-semibold uppercase tracking-[-0.03em] leading-[0.95] text-[clamp(40px,6vw,80px)]">
           {project.name}
         </h2>
         <p className="mt-4 max-w-3xl text-[clamp(18px,2vw,26px)] italic leading-[1.35] opacity-80">

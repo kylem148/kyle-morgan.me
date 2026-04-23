@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * Returns a 24-hour HH:MM:SS clock string for the given IANA timezone.
+ * Returns a 24-hour HH:MM clock string for the given IANA timezone.
  * Empty string until the first tick so server/client HTML matches.
  */
 export function useClock(timeZone = "America/Los_Angeles") {
@@ -13,11 +13,13 @@ export function useClock(timeZone = "America/Los_Angeles") {
       setClock(
         new Date().toLocaleTimeString("en-US", {
           hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
           timeZone,
         }),
       );
     tick();
-    const id = window.setInterval(tick, 1000);
+    const id = window.setInterval(tick, 30_000);
     return () => window.clearInterval(id);
   }, [timeZone]);
   return clock;
