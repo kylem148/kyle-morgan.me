@@ -135,7 +135,7 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
       const mat = new THREE.MeshBasicMaterial({
         color: INK.clone(),
         transparent: true,
-        opacity: 1,
+        opacity: 0,
       });
       const m = new THREE.Mesh(geom, mat);
       nodeGroup.add(m);
@@ -150,7 +150,7 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     const edgeMat = new THREE.LineBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0,
     });
     const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
     scene.add(edgeLines);
@@ -218,6 +218,35 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     // warmup — relax to equilibrium before first paint
     for (let k = 0; k < 180; k++) stepForces(1 / 60);
 
+    // Cinematic intro: opacity-only ripple from the hub outward. Positions
+    // settle via the normal physics; nodes farther from Kyle just fade in later.
+    const introDelay = new Float32Array(N);
+    const introDuration = 1.1;
+    const introSpread = 0.8;
+    const introHold = 0.9; // delay before any node fades in — lets hero text breathe
+    const introTotal = introHold + introDuration + introSpread;
+
+    const hubX = pos[hubIdx * 3];
+    const hubY = pos[hubIdx * 3 + 1];
+    const hubZ = pos[hubIdx * 3 + 2];
+
+    let maxD = 0.001;
+    for (let i = 0; i < N; i++) {
+      const dx = pos[i * 3] - hubX;
+      const dy = pos[i * 3 + 1] - hubY;
+      const dz = pos[i * 3 + 2] - hubZ;
+      const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (d > maxD) maxD = d;
+    }
+    for (let i = 0; i < N; i++) {
+      const dx = pos[i * 3] - hubX;
+      const dy = pos[i * 3 + 1] - hubY;
+      const dz = pos[i * 3 + 2] - hubZ;
+      const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      introDelay[i] = introHold + (d / maxD) * introSpread;
+    }
+    const introProg = new Float32Array(N);
+
     let raf = 0;
     const t0 = performance.now();
     let currentOpacity = 1;
@@ -234,6 +263,23 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
         renderer.render(new THREE.Scene(), camera);
         raf = requestAnimationFrame(render);
         return;
+      }
+
+      const introActive = t < introTotal;
+      let edgeIntro = 1;
+
+      if (introActive) {
+        let sum = 0;
+        for (let i = 0; i < N; i++) {
+          const local = (t - introDelay[i]) / introDuration;
+          const k = Math.max(0, Math.min(1, local));
+          const eased = 1 - Math.pow(1 - k, 3);
+          introProg[i] = eased;
+          sum += eased;
+        }
+        edgeIntro = sum / N;
+      } else {
+        for (let i = 0; i < N; i++) introProg[i] = 1;
       }
 
       stepForces(1 / 60);
@@ -265,7 +311,12 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
         mat.color.lerp(target, 0.12);
 
         const alpha = hi ? (isIncluded ? 1 : 0.15) : 1;
-        mat.opacity += (alpha * currentOpacity - mat.opacity) * 0.15;
+        const targetMatOpacity = alpha * currentOpacity * introProg[i];
+        if (introActive) {
+          mat.opacity = targetMatOpacity;
+        } else {
+          mat.opacity += (targetMatOpacity - mat.opacity) * 0.15;
+        }
       }
 
       for (let k = 0; k < edgeIdx.length; k++) {
@@ -291,7 +342,7 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
       }
       edgeGeom.attributes.position.needsUpdate = true;
       edgeGeom.attributes.color.needsUpdate = true;
-      edgeMat.opacity = (hi ? 0.25 : 0.35) * currentOpacity;
+      edgeMat.opacity = (hi ? 0.25 : 0.35) * currentOpacity * edgeIntro;
 
       const camP = Math.min(0.2, p);
       const settle = camP / 0.2;
