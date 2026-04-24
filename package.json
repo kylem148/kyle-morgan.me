@@ -1,7 +1,10 @@
 {
-  "name": "personal_website_new",
+  "name": "kyle-morgan-me",
   "version": "0.1.0",
   "private": true,
+  "description": "Personal site — Next.js 16, React 19, Three.js.",
+  "author": "Kyle Morgan",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

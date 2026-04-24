@@ -4,7 +4,6 @@ const LINKS = [
   { label: "Email", value: "kyle@themorganization.com", href: "mailto:kyle@themorganization.com" },
   { label: "GitHub", value: "kylem148", href: "https://github.com/kylem148" },
   { label: "LinkedIn", value: "in/kyle-morgan", href: "https://www.linkedin.com/in/kyle-morgan" },
-  { label: "Instagram", value: "@kyle.morgan", href: "https://instagram.com" },
 ] as const;
 
 export default function Contact() {

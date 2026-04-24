@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
     description:
       "Ease-of-life tooling for Operation Surf members. Built on a Hack4Impact team.",
     imageUrl: "/operation_surf.png",
-    link: "#",
+    link: "https://github.com/hack4impact-calpoly/Operation-Surf",
     ctaLabel: "In Development",
     posterArt:
       "radial-gradient(90% 70% at 50% 90%, #e8a97266 0%, transparent 65%), linear-gradient(180deg, #2b2114 0%, #1a150e 70%, #0d0a07 100%)",
