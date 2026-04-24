@@ -3,7 +3,7 @@ import SectionRail from "../ui/SectionRail";
 const LINKS = [
   { label: "Email", value: "kyle@themorganization.com", href: "mailto:kyle@themorganization.com" },
   { label: "GitHub", value: "kylem148", href: "https://github.com/kylem148" },
-  { label: "LinkedIn", value: "in/kyle-morgan", href: "https://linkedin.com/in/kyle-morgan0" },
+  { label: "LinkedIn", value: "in/kyle-morgan0", href: "https://linkedin.com/in/kyle-morgan0" },
 ] as const;
 
 export default function Contact() {
