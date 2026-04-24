@@ -13,16 +13,12 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kyle Morgan — Software Engineer",
-  description:
-    "Kyle Morgan — software engineer at Cal Poly SLO. Building digital solutions: immersive web experiences to large-scale agentic systems.",
-  openGraph: {
-    title: "Kyle Morgan — Software Engineer",
-    description:
-      "Software engineer at Cal Poly SLO. Building digital solutions from immersive web experiences to large-scale agentic systems.",
-    url: "https://kyle-morgan.me",
-    siteName: "Kyle Morgan",
-    type: "website",
+  title: "Kyle Morgan | Software Developer",
+  description: "Building digital experiences. Portfolio of Kyle Morgan.",
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 
