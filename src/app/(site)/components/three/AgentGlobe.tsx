@@ -130,6 +130,10 @@ export default function AgentGlobe({
     const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
     group.add(edgeLines);
 
+    // Compile shaders now. The loop only starts once the globe scrolls into
+    // view, and compiling then would stall that first frame mid-scroll.
+    renderer.compile(scene, camera);
+
     // Raycast pointer → emit hover events. The visual highlight is driven
     // exclusively by focusIdRef (parent-owned).
     const raycaster = new THREE.Raycaster();
@@ -138,6 +142,9 @@ export default function AgentGlobe({
     const nodeMeshes = nodes.map((n) => n.mesh);
 
     const handlePointer = (e: PointerEvent) => {
+      // Touch has no hover. A finger starting a scroll on the globe would
+      // otherwise "hover" a node and swap the mobile card mid-scroll.
+      if (e.pointerType === "touch") return;
       const rect = renderer.domElement.getBoundingClientRect();
       ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -162,8 +169,10 @@ export default function AgentGlobe({
     mount.addEventListener("pointerleave", handleLeave);
 
     let raf = 0;
-    const t0 = performance.now();
-    let lastFrame = t0;
+    // Animation clock. It only advances while the globe is on screen, so it
+    // resumes where it paused.
+    let t = 0;
+    let lastFrame = 0;
     // Transition time (seconds) for a node's 0 → 1 highlight. Hover is quick
     // so interaction feels immediate; idle stays slow and contemplative.
     // Smootherstep eases both ends so it feels GSAP-ish.
@@ -172,9 +181,9 @@ export default function AgentGlobe({
 
     const render = () => {
       const now = performance.now();
-      const t = (now - t0) / 1000;
       const dt = Math.min(0.1, (now - lastFrame) / 1000);
       lastFrame = now;
+      t += dt;
 
       group.rotation.y = t * 0.08;
       group.rotation.x = Math.sin(t * 0.04) * 0.1;
@@ -221,20 +230,41 @@ export default function AgentGlobe({
       renderer.render(scene, camera);
       raf = requestAnimationFrame(render);
     };
-    raf = requestAnimationFrame(render);
+
+    const start = () => {
+      if (raf) return;
+      lastFrame = performance.now();
+      raf = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    // Only render while the globe is on screen.
+    const io = new IntersectionObserver(([entry]) =>
+      entry.isIntersecting ? start() : stop(),
+    );
+    io.observe(mount);
 
     const onResize = () => {
-      width = mount.clientWidth;
-      height = mount.clientHeight;
+      const w = mount.clientWidth;
+      const h = mount.clientHeight;
+      if (w === width && h === height) return;
+      width = w;
+      height = h;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      // setSize clears the canvas. Redraw right away so a resize never
+      // presents an empty frame.
+      renderer.render(scene, camera);
     };
     const ro = new ResizeObserver(onResize);
     ro.observe(mount);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
+      io.disconnect();
       ro.disconnect();
       mount.removeEventListener("pointermove", handlePointer);
       mount.removeEventListener("pointerleave", handleLeave);

@@ -18,13 +18,20 @@ export default function PersonalSite() {
   // inside <GraphScene/>. A ref (not state) so the 3D loop doesn't re-render.
   const hoverIdRef = useRef<string | null>(null);
 
+  // <GraphScene/> only renders while the hero it shows through is on screen.
+  const heroRef = useRef<HTMLElement | null>(null);
+
   return (
     <div className="relative min-h-screen bg-[#f2efe8] text-[#0f0e0c] font-sans">
-      <GraphScene progressRef={progressRef} hoverIdRef={hoverIdRef} />
+      <GraphScene
+        progressRef={progressRef}
+        hoverIdRef={hoverIdRef}
+        heroRef={heroRef}
+      />
 
       <div className="relative z-10">
         <Header />
-        <Hero />
+        <Hero ref={heroRef} />
         <Bio />
         <Works hoverIdRef={hoverIdRef} />
         <CurrentFocus />

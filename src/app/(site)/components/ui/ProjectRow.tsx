@@ -23,9 +23,11 @@ export default function ProjectRow({ project, active, onEnter, onLeave }: Props)
       href={project.link}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      onPointerEnter={(e) =>
-        onEnter(project, { x: e.clientX, y: e.clientY })
-      }
+      onPointerEnter={(e) => {
+        // Touch has no hover. A finger starting a scroll shouldn't count as one.
+        if (e.pointerType === "touch") return;
+        onEnter(project, { x: e.clientX, y: e.clientY });
+      }}
       onPointerLeave={onLeave}
       onFocus={(e) => {
         // Keyboard focus has no cursor, so anchor the poster to the row.

@@ -89,14 +89,17 @@ const MUTED = new THREE.Color(0x7a756c);
 type Props = {
   progressRef: RefObject<number>;
   hoverIdRef: RefObject<string | null>;
+  // The section the graph shows through. Rendering pauses while it's offscreen.
+  heroRef: RefObject<HTMLElement | null>;
 };
 
-export default function GraphScene({ progressRef, hoverIdRef }: Props) {
+export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (!mount) return;
+    const hero = heroRef.current;
+    if (!mount || !hero) return;
 
     let width = mount.clientWidth;
     let height = mount.clientHeight;
@@ -158,6 +161,10 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     });
     const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
     scene.add(edgeLines);
+
+    // Compile shaders now, so a page opened below the hero doesn't stall the
+    // first frame when the hero scrolls back into view.
+    renderer.compile(scene, camera);
 
     const stepForces = (dt: number) => {
       const repulse = 1.2;
@@ -252,19 +259,30 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
     const introProg = new Float32Array(N);
 
     let raf = 0;
-    const t0 = performance.now();
+    // Scene clock. It only advances while the loop runs, so the intro and
+    // camera sway resume where they paused instead of jumping ahead.
+    let t = 0;
+    let lastFrame = 0;
     let currentOpacity = 1;
     let driftSeed = 0;
+    // True while the canvas holds a drawn frame, false once it's been cleared.
+    let drawn = false;
 
     const render = () => {
-      const t = (performance.now() - t0) / 1000;
+      const now = performance.now();
+      t += Math.min(0.1, (now - lastFrame) / 1000);
+      lastFrame = now;
       const p = Math.max(0, Math.min(1, progressRef.current));
 
       const targetOpacity = p < 0.22 ? 1 : p > 0.35 ? 0 : 1 - (p - 0.22) / 0.13;
       currentOpacity += (targetOpacity - currentOpacity) * 0.12;
 
       if (currentOpacity < 0.01) {
-        renderer.render(new THREE.Scene(), camera);
+        // Faded out: clear once, then skip GPU work until it fades back in.
+        if (drawn) {
+          renderer.clear();
+          drawn = false;
+        }
         raf = requestAnimationFrame(render);
         return;
       }
@@ -356,22 +374,45 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
       camera.lookAt(0, 1.6, 0);
 
       renderer.render(scene, camera);
+      drawn = true;
       raf = requestAnimationFrame(render);
     };
-    raf = requestAnimationFrame(render);
+
+    const start = () => {
+      if (raf) return;
+      lastFrame = performance.now();
+      raf = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    // Every section after the hero is opaque, so the graph can only be seen
+    // while the hero is on screen. Don't render it the rest of the time.
+    const io = new IntersectionObserver(([entry]) =>
+      entry.isIntersecting ? start() : stop(),
+    );
+    io.observe(hero);
 
     const onResize = () => {
-      width = mount.clientWidth;
-      height = mount.clientHeight;
+      const w = mount.clientWidth;
+      const h = mount.clientHeight;
+      if (w === width && h === height) return;
+      width = w;
+      height = h;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      // setSize clears the canvas. Redraw right away so a resize never
+      // presents an empty frame.
+      if (drawn) renderer.render(scene, camera);
     };
     const ro = new ResizeObserver(onResize);
     ro.observe(mount);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
+      io.disconnect();
       ro.disconnect();
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
       renderer.dispose();
@@ -382,13 +423,16 @@ export default function GraphScene({ progressRef, hoverIdRef }: Props) {
         (m.material as THREE.Material).dispose();
       });
     };
-  }, [progressRef, hoverIdRef]);
+  }, [progressRef, hoverIdRef, heroRef]);
 
+  // Sized with svh instead of bottom-0 so the box, and the canvas in it, keeps
+  // its size when a mobile browser's toolbar collapses or expands. The strip it
+  // leaves uncovered at the bottom is behind the opaque sections by then.
   return (
     <div
       ref={mountRef}
       aria-hidden="true"
-      className="graph-mask pointer-events-none fixed left-0 right-0 bottom-0 top-[42vh] md:top-0 z-0"
+      className="graph-mask pointer-events-none fixed inset-x-0 top-[42lvh] h-[calc(100svh-42lvh)] z-0 md:top-0 md:h-svh"
     />
   );
 }

@@ -1,8 +1,9 @@
+import type { Ref } from "react";
 import ScrollCue from "../ui/ScrollCue";
 
-export default function Hero() {
+export default function Hero({ ref }: { ref?: Ref<HTMLElement> }) {
   return (
-    <section className="relative flex min-h-[calc(100svh-34px)] flex-col justify-start pt-[14vh] pb-16 px-6 md:justify-end md:pt-[26vh]">
+    <section ref={ref} className="relative flex min-h-[calc(100svh-34px)] flex-col justify-start pt-[14vh] pb-16 px-6 md:justify-end md:pt-[26vh]">
       {/* Mobile stacks to two lines; 19vw sizes "MORGAN" to fill the row. */}
       <h1 className="text-center font-semibold uppercase tracking-[-0.03em] leading-[0.9] md:mix-blend-multiply text-[19vw] md:text-[clamp(56px,10vw,140px)]">
         Kyle Morgan

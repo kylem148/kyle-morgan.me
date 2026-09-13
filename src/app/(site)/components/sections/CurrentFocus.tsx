@@ -72,27 +72,32 @@ export default function CurrentFocus() {
               onHoverChange={setHover}
             />
           </div>
-          {(() => {
-            const id = hover?.id ?? idleId;
-            const agent = id ? ALL_AGENTS.find((a) => a.id === id) : null;
-            return (
-              <div className="md:hidden w-full max-w-[720px] min-h-[110px] px-2 pt-4 pb-8">
-                {agent ? (
-                  <div
-                    key={agent.id}
-                    style={{ animation: "agent-card-in 500ms ease-out both" }}
-                  >
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-[#d46a3a]">
-                      {agent.label}
-                    </div>
-                    <div className="mt-2 text-[14px] leading-[1.45]">
-                      {agent.thought}
-                    </div>
+          {/* Every card sits in the same grid cell and only the focused one is
+              visible, so the box is always as tall as the longest note and the
+              page below never shifts as the cards rotate. */}
+          <div className="md:hidden grid w-full max-w-[720px] px-2 pt-4 pb-8">
+            {ALL_AGENTS.map((agent) => {
+              const active = agent.id === (hover?.id ?? idleId);
+              return (
+                <div
+                  key={agent.id}
+                  className={`col-start-1 row-start-1 ${active ? "" : "invisible"}`}
+                  style={
+                    active
+                      ? { animation: "agent-card-in 500ms ease-out both" }
+                      : undefined
+                  }
+                >
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-[#d46a3a]">
+                    {agent.label}
                   </div>
-                ) : null}
-              </div>
-            );
-          })()}
+                  <div className="mt-2 text-[14px] leading-[1.45]">
+                    {agent.thought}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
