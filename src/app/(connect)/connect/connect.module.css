@@ -1,0 +1,550 @@
+/*
+ * Started as a copy of the dot.cards profile (bright theme, "w" accent color).
+ * Sizes, colors, and shadows were read from the live page's computed styles.
+ */
+
+.body {
+  margin: 0;
+  background: #fff;
+}
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page :where(*),
+.page :where(*)::before,
+.page :where(*)::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.page :where(button, input, textarea) {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(a, button):focus-visible {
+  outline: 2px solid #414141;
+  outline-offset: 2px;
+}
+
+.column {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.topNav {
+  height: 50px;
+}
+
+/* Banner + avatar */
+
+.imageSection {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2.4;
+  overflow: hidden;
+  border: 2px solid #414141;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #fff 0, #eef2f8 100%);
+}
+
+.avatar {
+  position: absolute;
+  bottom: -9px;
+  left: 15px;
+  z-index: 10;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  border: 2px solid #414141;
+  border-radius: 50%;
+  background: #9ea5af;
+}
+
+.cover {
+  object-fit: cover;
+}
+
+/* Name, headline, bio, skills */
+
+.textArea {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 15px 12px;
+}
+
+/* White card behind the text that tucks 16px up under the banner. */
+.textArea::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 16px);
+  border-radius: 0 0 15px 15px;
+  background: #fff;
+  box-shadow: 0 0 20px rgba(110, 135, 171, 0.15);
+}
+
+.name {
+  position: relative;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 30px;
+  word-break: break-word;
+}
+
+.headline {
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: -0.01em;
+  color: #192734;
+  word-break: break-word;
+}
+
+.subBio {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 3px 12px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #fff 87%, transparent 100%);
+  mask-image: linear-gradient(90deg, #fff 87%, transparent 100%);
+}
+
+.subBio::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  width: 2px;
+  height: 70%;
+  border-radius: 50px;
+  background: #9ea5af;
+  transform: translateY(-50%);
+}
+
+.subBio p {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 121.51%;
+  color: #9ea5af;
+  word-break: break-word;
+}
+
+.chips {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px 12px;
+  height: 31px;
+  overflow: hidden;
+  list-style: none;
+  -webkit-mask-image: linear-gradient(to bottom, #fff 50%, transparent);
+  mask-image: linear-gradient(to bottom, #fff 50%, transparent);
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  height: 31px;
+  padding: 8px 12px;
+  border-radius: 72px;
+  background: rgba(184, 191, 202, 0.3);
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.chipText {
+  max-width: min(calc(100vw - 130px), 400px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Exchange Contact + save buttons */
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  height: 50px;
+  margin: 15px 0;
+  padding: 0 15px;
+}
+
+.bigButton {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  padding: 13px 16px;
+  border-radius: 9px;
+  background: #414141;
+  box-shadow: 0 2px 0 #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bigButton:hover {
+  transform: scale(0.97);
+}
+
+.bigButton:active {
+  transform: scale(0.88);
+}
+
+.bigButton:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.iconButton {
+  width: 56px;
+}
+
+.buttonLabel {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.7px;
+  white-space: nowrap;
+}
+
+/* Link rows */
+
+.links {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr);
+  gap: 10px;
+  margin-bottom: 37px;
+}
+
+.linkRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  margin-left: 22px;
+  padding: 0 20px 0 34px;
+  border: 3px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 20px rgba(110, 135, 171, 0.15);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+  transition: border 0.3s, opacity 0.3s;
+}
+
+/* The icon hangs 28px off the left edge of its row. */
+.iconSlot {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  transform: translateX(-28px);
+}
+
+.iconFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border: 1px solid transparent;
+  border-radius: 20%;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 16%;
+  background: #414141;
+  box-shadow: 0 0 20px rgba(110, 135, 171, 0.15);
+}
+
+.icon > svg {
+  transform: scale(0.83333);
+}
+
+.linkText {
+  display: grid;
+  overflow: hidden;
+}
+
+.linkTitle {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  letter-spacing: -0.16px;
+}
+
+.linkValue {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: -0.2px;
+  color: #9ea5af;
+  white-space: nowrap;
+}
+
+.linkArrow {
+  display: block;
+  padding-left: 10px;
+}
+
+/* Exchange Contact sheet */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.15);
+  -webkit-backdrop-filter: blur(5.5px);
+  backdrop-filter: blur(5.5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s linear, visibility 0s linear 0.35s;
+}
+
+.overlay[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s linear;
+}
+
+.sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 500px;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 25px 25px 30px;
+  overflow-y: auto;
+  border-radius: 25px 25px 0 0;
+  background: #fff;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.overlay[data-open="true"] .sheet {
+  transform: none;
+}
+
+.sheetHeader {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 15px;
+  height: 35px;
+}
+
+.sheetTitle {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 25px;
+  letter-spacing: -0.44px;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 20px rgba(110, 135, 171, 0.14);
+  cursor: pointer;
+}
+
+.sheetButton {
+  height: 50px;
+  box-shadow:
+    0 2px 0 #f7f9f9,
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 2px 4px rgba(0, 0, 0, 0.03),
+    0 4px 8px rgba(0, 0, 0, 0.03),
+    0 8px 16px rgba(0, 0, 0, 0.03),
+    0 16px 32px rgba(0, 0, 0, 0.03);
+}
+
+.form {
+  display: grid;
+  gap: 23px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.intro strong {
+  font-weight: 700;
+}
+
+.fields {
+  display: grid;
+  gap: 12px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #3d4145;
+}
+
+.noteGroup {
+  margin-bottom: -12px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: -0.25px;
+  color: #000;
+}
+
+.input::placeholder {
+  color: #9ea5af;
+}
+
+.noteField {
+  height: auto;
+}
+
+.textarea {
+  height: 90px;
+  padding: 12px 0;
+  resize: none;
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.formError {
+  margin-bottom: -8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #d92d20;
+}
+
+.submitWrap {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.sent {
+  display: grid;
+  gap: 6px;
+  margin: 20px 0 8px;
+}
+
+.sentTitle {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 25px;
+  letter-spacing: -0.44px;
+}
+
+.sentText {
+  font-size: 14px;
+  line-height: 20px;
+  color: #3d4145;
+}
+
+.doneButton {
+  margin-top: 17px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .sheet,
+  .bigButton {
+    transition: none;
+  }
+}
