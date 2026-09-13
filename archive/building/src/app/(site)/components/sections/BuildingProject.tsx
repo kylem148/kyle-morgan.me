@@ -3,17 +3,15 @@ import type { BuildingProject as ProjectType } from "@/content/building-projects
 
 type Props = {
   project: ProjectType;
-  index: number;
 };
 
-export default function BuildingProject({ project, index }: Props) {
-  const label = `§ 0${index + 1} — ${project.name}`;
+export default function BuildingProject({ project }: Props) {
   const hasLinks =
     project.links.repo || project.links.demo || project.links.writeup;
 
   return (
     <section className="grid grid-cols-12 border-t border-[#0f0e0c] bg-[#f2efe8]">
-      <SectionRail label={label} />
+      <SectionRail label={project.name} />
       <div className="col-span-11 px-6 md:px-10 py-14 md:py-20">
         <h2 className="font-semibold uppercase tracking-[-0.03em] leading-[0.95] text-[clamp(40px,6vw,80px)]">
           {project.name}

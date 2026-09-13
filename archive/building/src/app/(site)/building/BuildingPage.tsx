@@ -1,20 +1,13 @@
-"use client";
-
 import Link from "next/link";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import BuildingProject from "../components/sections/BuildingProject";
 import { BUILDING_PROJECTS } from "@/content/building-projects";
-import { useClock } from "@/lib/useClock";
-import { useScrollProgress } from "@/lib/useScrollProgress";
 
 export default function BuildingPage() {
-  const { progress } = useScrollProgress();
-  const clock = useClock();
-
   return (
     <div className="min-h-screen bg-[#f2efe8] text-[#0f0e0c] font-sans">
-      <Header progress={progress} clock={clock} />
+      <Header />
 
       <main>
       <section className="border-b border-[#0f0e0c] px-6 md:px-10 py-16 md:py-24">
@@ -36,8 +29,8 @@ export default function BuildingPage() {
         </p>
       </section>
 
-      {BUILDING_PROJECTS.map((p, i) => (
-        <BuildingProject key={p.id} project={p} index={i} />
+      {BUILDING_PROJECTS.map((p) => (
+        <BuildingProject key={p.id} project={p} />
       ))}
       </main>
 
