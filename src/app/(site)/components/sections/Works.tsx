@@ -1,18 +1,13 @@
 "use client";
 
-import { useCallback, useState, type RefObject } from "react";
+import { useCallback, useState } from "react";
 import SectionRail from "../ui/SectionRail";
 import ProjectRow from "../ui/ProjectRow";
 import ProjectPoster, { POSTER } from "../ui/ProjectPoster";
 import { PROJECTS, type Project } from "@/content/projects";
 import { useCursorFollow } from "@/lib/useCursorFollow";
 
-type Props = {
-  // Ref shared with <GraphScene/> so hovering a row highlights its subgraph.
-  hoverIdRef: RefObject<string | null>;
-};
-
-export default function Works({ hoverIdRef }: Props) {
+export default function Works() {
   const [hoverProject, setHoverProject] = useState<Project | null>(null);
   // The poster keeps its last project while fading out. `instant` skips the
   // crossfade when it was fully hidden, so a stale image never flashes in.
@@ -26,19 +21,17 @@ export default function Works({ hoverIdRef }: Props) {
 
   const handleEnter = useCallback(
     (p: Project, pos?: { x: number; y: number }) => {
-      hoverIdRef.current = p.graphId;
       const instant = show(pos);
       setPoster({ project: p, instant });
       setHoverProject(p);
     },
-    [hoverIdRef, show],
+    [show],
   );
 
   const handleLeave = useCallback(() => {
-    hoverIdRef.current = null;
     hide();
     setHoverProject(null);
-  }, [hoverIdRef, hide]);
+  }, [hide]);
 
   return (
     <>

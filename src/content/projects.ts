@@ -6,7 +6,6 @@ import sjsuImage from "@/assets/projects/sjsu_navigator.png";
 
 export type Project = {
   id: number;
-  graphId: string;
   title: string;
   category: string;
   description: string;
@@ -20,7 +19,6 @@ export type Project = {
 export const PROJECTS: Project[] = [
   {
     id: 1,
-    graphId: "secretary",
     title: "Personal Secretary Agent",
     category: "Multi-Agent System",
     description:
@@ -31,7 +29,6 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 2,
-    graphId: "comanager",
     // Non-breaking hyphen so "Co-Manager" never splits across lines.
     title: "Development Co‑Manager",
     category: "Github Orchestration",
@@ -43,7 +40,6 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 3,
-    graphId: "prism",
     title: "PRISM",
     category: "AI Visualization Software",
     description:
@@ -54,7 +50,6 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 4,
-    graphId: "sjsu",
     title: "SJSU Student Success Navigator",
     category: "RAG Assistant",
     description:

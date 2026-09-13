@@ -71,29 +71,16 @@ X_ORDER.forEach((id, slot) => {
   X_ANCHORS[i] = -X_SPREAD / 2 + (slot + 0.5) * (X_SPREAD / X_ORDER.length);
 });
 
-// Precomputed 1-hop subgraph per project/hub for hover highlight.
-const HIGHLIGHT_SET: Record<string, Set<string>> = {};
-for (const p of NODES.filter((n) => n.kind === "project" || n.kind === "hub")) {
-  const s = new Set<string>([p.id]);
-  for (const [a, b] of EDGES) {
-    if (a === p.id) s.add(b);
-    if (b === p.id) s.add(a);
-  }
-  HIGHLIGHT_SET[p.id] = s;
-}
-
 const INK = new THREE.Color(0x0f0e0c);
-const ACCENT = new THREE.Color(0xd46a3a);
 const MUTED = new THREE.Color(0x7a756c);
 
 type Props = {
   progressRef: RefObject<number>;
-  hoverIdRef: RefObject<string | null>;
   // The section the graph shows through. Rendering pauses while it's offscreen.
   heroRef: RefObject<HTMLElement | null>;
 };
 
-export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) {
+export default function GraphScene({ progressRef, heroRef }: Props) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -140,7 +127,7 @@ export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) 
     const nodeMeshes: THREE.Mesh[] = NODES.map((n) => {
       const geom = new THREE.SphereGeometry(n.r, 20, 20);
       const mat = new THREE.MeshBasicMaterial({
-        color: INK.clone(),
+        color: n.kind === "hub" || n.kind === "project" ? INK : MUTED,
         transparent: true,
         opacity: 0,
       });
@@ -150,12 +137,10 @@ export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) 
     });
 
     const edgePositions = new Float32Array(edgeIdx.length * 2 * 3);
-    const edgeColors = new Float32Array(edgeIdx.length * 2 * 3);
     const edgeGeom = new THREE.BufferGeometry();
     edgeGeom.setAttribute("position", new THREE.BufferAttribute(edgePositions, 3));
-    edgeGeom.setAttribute("color", new THREE.BufferAttribute(edgeColors, 3));
     const edgeMat = new THREE.LineBasicMaterial({
-      vertexColors: true,
+      color: INK,
       transparent: true,
       opacity: 0,
     });
@@ -316,24 +301,12 @@ export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) 
         }
       }
 
-      const hover = hoverIdRef.current;
-      const hi = hover ? HIGHLIGHT_SET[hover] : null;
-
       for (let i = 0; i < N; i++) {
         const m = nodeMeshes[i];
         m.position.set(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
 
-        const n = NODES[i];
-        const isIncluded = !hi || hi.has(n.id);
-        const isTarget = hi && n.id === hover;
-
-        const base = n.kind === "hub" || n.kind === "project" ? INK : MUTED;
-        const target = isTarget ? ACCENT : isIncluded ? base : MUTED;
         const mat = m.material as THREE.MeshBasicMaterial;
-        mat.color.lerp(target, 0.12);
-
-        const alpha = hi ? (isIncluded ? 1 : 0.15) : 1;
-        const targetMatOpacity = alpha * currentOpacity * introProg[i];
+        const targetMatOpacity = currentOpacity * introProg[i];
         if (introActive) {
           mat.opacity = targetMatOpacity;
         } else {
@@ -343,28 +316,15 @@ export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) 
 
       for (let k = 0; k < edgeIdx.length; k++) {
         const [a, b] = edgeIdx[k];
-        const na = NODES[a];
-        const nb = NODES[b];
         edgePositions[k * 6]     = pos[a * 3];
         edgePositions[k * 6 + 1] = pos[a * 3 + 1];
         edgePositions[k * 6 + 2] = pos[a * 3 + 2];
         edgePositions[k * 6 + 3] = pos[b * 3];
         edgePositions[k * 6 + 4] = pos[b * 3 + 1];
         edgePositions[k * 6 + 5] = pos[b * 3 + 2];
-
-        const bothIn = !hi || (hi.has(na.id) && hi.has(nb.id));
-        const highlighted = hi && hi.has(na.id) && hi.has(nb.id);
-        const c = highlighted ? ACCENT : bothIn ? INK : MUTED;
-        edgeColors[k * 6]     = c.r;
-        edgeColors[k * 6 + 1] = c.g;
-        edgeColors[k * 6 + 2] = c.b;
-        edgeColors[k * 6 + 3] = c.r;
-        edgeColors[k * 6 + 4] = c.g;
-        edgeColors[k * 6 + 5] = c.b;
       }
       edgeGeom.attributes.position.needsUpdate = true;
-      edgeGeom.attributes.color.needsUpdate = true;
-      edgeMat.opacity = (hi ? 0.25 : 0.35) * currentOpacity * edgeIntro;
+      edgeMat.opacity = 0.35 * currentOpacity * edgeIntro;
 
       const camP = Math.min(0.2, p);
       const settle = camP / 0.2;
@@ -423,7 +383,7 @@ export default function GraphScene({ progressRef, hoverIdRef, heroRef }: Props) 
         (m.material as THREE.Material).dispose();
       });
     };
-  }, [progressRef, hoverIdRef, heroRef]);
+  }, [progressRef, heroRef]);
 
   // Sized with svh instead of bottom-0 so the box, and the canvas in it, keeps
   // its size when a mobile browser's toolbar collapses or expands. The strip it
