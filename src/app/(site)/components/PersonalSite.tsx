@@ -9,12 +9,10 @@ import Works from "./sections/Works";
 import CurrentFocus from "./sections/CurrentFocus";
 import Contact from "./sections/Contact";
 import GraphScene from "./three/GraphScene";
-import { useClock } from "@/lib/useClock";
 import { useScrollProgress } from "@/lib/useScrollProgress";
 
 export default function PersonalSite() {
-  const { progressRef, progress } = useScrollProgress();
-  const clock = useClock();
+  const progressRef = useScrollProgress();
 
   // Shared with <Works/> — hovered project's graphId drives subgraph highlight
   // inside <GraphScene/>. A ref (not state) so the 3D loop doesn't re-render.
@@ -25,7 +23,7 @@ export default function PersonalSite() {
       <GraphScene progressRef={progressRef} hoverIdRef={hoverIdRef} />
 
       <div className="relative z-10">
-        <Header progress={progress} clock={clock} />
+        <Header />
         <Hero />
         <Bio />
         <Works hoverIdRef={hoverIdRef} />
