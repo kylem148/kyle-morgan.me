@@ -8,7 +8,7 @@ export const MANAGER: Agent = {
   id: "manager",
   label: "Manager",
   thought:
-    "Orchestrator-worker pattern. Reasoning lives here, execution doesn't. Keeping the brain away from tools makes the whole system easier to trust.",
+    "A delegation/orchestrator agent without any other permissions. Keeping the brain away from tools makes the whole system more secure.",
 };
 
 export const AGENTS: Agent[] = [
@@ -16,41 +16,33 @@ export const AGENTS: Agent[] = [
     id: "worker",
     label: "Worker",
     thought:
-      "Narrow scope, narrow permissions. Blast radius is capped by what this agent is allowed to touch, not by what it decides to do.",
+      "Narrow scope and narrow permissions. Isolated to only what it is specifically designed to do.",
   },
   {
     id: "security",
     label: "Security",
     thought:
-      "The lethal trifecta problem. Prompt injection can't be reasoned away, so enforcement lives in code, not in a prompt.",
+      "Agents create a vast variety of threats, so enforcement lives in a multilayered setup.",
   },
   {
     id: "checker",
     label: "Action Checker",
     thought:
-      "Deterministic gate before any real-world action. Reasoning is cheap, execution is permanent, and tool output is the new attack surface.",
+      "Deterministic gate before any real-world action. Used to check and enforce the quality of answers from the system before they go out.",
   },
   {
-    id: "memory",
-    label: "Memory",
+    id: "data",
+    label: "Data",
     thought:
-      "Defaults plus overrides. Still working out where user control ends and poisoned context begins.",
-  },
-  {
-    id: "queue",
-    label: "Queue",
-    thought:
-      "Sequential first. Concurrency gets earned once tracing and failure modes are solid, not before.",
+      "Creating an ecosystem of data for agents is one of the hardest parts of any project. Often a mix of short-term and long-term data.",
   },
 ];
 
-// Edges between Manager and each agent, plus a few peer edges for visual rhythm.
+// Edges between Manager and each agent, plus a peer edge for visual rhythm.
 export const AGENT_EDGES: [string, string][] = [
   ["manager", "worker"],
   ["manager", "security"],
   ["manager", "checker"],
-  ["manager", "memory"],
-  ["manager", "queue"],
-  ["queue", "worker"],
+  ["manager", "data"],
   ["security", "checker"],
 ];

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import SectionRail from "../ui/SectionRail";
 import AgentGlobe from "../three/AgentGlobe";
@@ -30,25 +29,26 @@ export default function CurrentFocus() {
       const clear = setTimeout(() => setIdleId(null), 0);
       return () => clearTimeout(clear);
     }
-    const ids = AGENTS.map((a) => a.id);
-    const pick = (current: string | null) => {
-      const pool = current ? ids.filter((id) => id !== current) : ids;
-      return pool[Math.floor(Math.random() * pool.length)];
-    };
-    // Mobile gets a slower cycle since the card below the globe is the only
-    // way to read each agent's thought — need dwell time for reading.
+    // Mobile has no hover, so the card below the globe is the only way to
+    // read each agent's thought. Dwell scales with the thought's length
+    // (~240wpm plus a beat for the card fade-in) so each one can be finished.
     const isMobile =
       typeof window !== "undefined" &&
       window.matchMedia("(max-width: 767px)").matches;
-    const intervalMs = isMobile ? 4000 : 2500;
-    const initial = setTimeout(() => setIdleId((cur) => pick(cur)), 1000);
-    const interval = setInterval(() => {
-      setIdleId((cur) => pick(cur));
-    }, intervalMs);
-    return () => {
-      clearTimeout(initial);
-      clearInterval(interval);
+    const dwellMs = (id: string) => {
+      if (!isMobile) return 2500;
+      const words = AGENTS.find((a) => a.id === id)!.thought.split(/\s+/).length;
+      return 2500 + words * 250;
     };
+    let current: string | null = null;
+    const step = () => {
+      const pool = AGENTS.filter((a) => a.id !== current);
+      current = pool[Math.floor(Math.random() * pool.length)].id;
+      setIdleId(current);
+      timer = setTimeout(step, dwellMs(current));
+    };
+    let timer = setTimeout(step, 1000);
+    return () => clearTimeout(timer);
   }, [hover]);
 
   return (
@@ -57,28 +57,14 @@ export default function CurrentFocus() {
         id="focus"
         className="grid grid-cols-12 border-t border-[#0f0e0c] bg-[#f2efe8]"
       >
-        <SectionRail label="§ 03 — Current Focus" />
+        <SectionRail label="Current Focus" />
         <div className="col-span-11 md:col-span-5 md:border-r border-[#0f0e0c] flex flex-col justify-center px-6 md:px-8 py-10">
-          <div className="mb-6 text-[11px] uppercase tracking-[0.15em] opacity-60">
-            Agent architecture
-          </div>
           <p className="text-[clamp(20px,2.2vw,30px)] leading-[1.3] tracking-[-0.01em]">
-            Currently exploring how multi-agent systems should be structured.{" "}
-            <em className="italic">Managers</em> reason.{" "}
-            <em className="italic">Workers</em> act.{" "}
-            <em className="italic">Checkers</em> validate.
+            Currently exploring how multi-agent systems should be structured.
+            <span className="hidden md:inline"> Hover a node to see notes.</span>
           </p>
-          <Link
-            href="/building"
-            className="mt-8 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.2em] underline underline-offset-[5px] hover:opacity-70"
-          >
-            See what I&rsquo;m building <span aria-hidden="true">↗</span>
-          </Link>
         </div>
         <div className="col-span-12 md:col-span-6 flex flex-col items-center justify-start gap-3 px-4 pt-4 pb-2">
-          <p className="hidden md:block w-full max-w-[720px] text-[14px] italic leading-[1.5] opacity-60">
-            Notes from projects. Hover a node.
-          </p>
           <div className="relative aspect-square w-full max-w-[720px] -my-[8%]">
             <AgentGlobe
               focusId={hover?.id ?? idleId}
