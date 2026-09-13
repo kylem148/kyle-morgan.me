@@ -20,16 +20,20 @@ const NODES: NodeDef[] = [
   { id: "node", label: "Node", kind: "tech", r: 0.11 },
   { id: "mongo", label: "Mongo", kind: "tech", r: 0.1 },
   { id: "unity", label: "Unity", kind: "tech", r: 0.12 },
+  { id: "python", label: "Python", kind: "tech", r: 0.11 },
+  { id: "git", label: "Git", kind: "tech", r: 0.1 },
+  { id: "aws", label: "AWS", kind: "tech", r: 0.12 },
 
   { id: "api", label: "API", kind: "concept", r: 0.08 },
   { id: "auth", label: "Auth", kind: "concept", r: 0.08 },
   { id: "agents", label: "Agents", kind: "concept", r: 0.1 },
   { id: "ux", label: "UX", kind: "concept", r: 0.08 },
+  { id: "mcp", label: "MCP", kind: "concept", r: 0.08 },
 
   { id: "prism", label: "PRISM", kind: "project", r: 0.17 },
-  { id: "vibe", label: "Vibe Coding", kind: "project", r: 0.17 },
-  { id: "resources", label: "Resources", kind: "project", r: 0.17 },
-  { id: "surf", label: "Operation Surf", kind: "project", r: 0.17 },
+  { id: "sjsu", label: "SJSU Navigator", kind: "project", r: 0.17 },
+  { id: "secretary", label: "Secretary Agent", kind: "project", r: 0.17 },
+  { id: "comanager", label: "Co-Manager", kind: "project", r: 0.17 },
 ];
 
 const EDGES: EdgeDef[] = [
@@ -37,16 +41,16 @@ const EDGES: EdgeDef[] = [
   ["html", "css"], ["css", "js"], ["html", "js"],
   ["js", "ts"], ["js", "react"], ["react", "next"], ["next", "vite"],
   ["node", "mongo"], ["node", "api"], ["api", "auth"],
-  ["unity", "js"], ["agents", "api"], ["react", "ux"],
+  ["unity", "js"], ["agents", "api"], ["react", "ux"], ["mcp", "agents"],
 
   // project → tech
   ["prism", "agents"], ["prism", "api"], ["prism", "ts"], ["prism", "node"],
-  ["vibe", "html"], ["vibe", "css"], ["vibe", "js"], ["vibe", "vite"], ["vibe", "ux"],
-  ["resources", "next"], ["resources", "mongo"], ["resources", "node"], ["resources", "react"],
-  ["surf", "react"], ["surf", "mongo"], ["surf", "node"], ["surf", "ux"],
+  ["sjsu", "agents"], ["sjsu", "aws"], ["sjsu", "python"], ["sjsu", "auth"], ["sjsu", "api"],
+  ["secretary", "agents"], ["secretary", "mcp"], ["secretary", "auth"], ["secretary", "api"], ["secretary", "python"],
+  ["comanager", "agents"], ["comanager", "git"],
 
   // hub → projects & core
-  ["kyle", "prism"], ["kyle", "vibe"], ["kyle", "resources"], ["kyle", "surf"],
+  ["kyle", "prism"], ["kyle", "sjsu"], ["kyle", "secretary"], ["kyle", "comanager"],
   ["kyle", "agents"], ["kyle", "ts"],
 ];
 
@@ -55,9 +59,9 @@ const NODE_INDEX = new Map(NODES.map((n, i) => [n.id, i]));
 // Horizontal slot order for the mountain-range layout. Hand-curated so that
 // connected nodes land roughly adjacent and the hub sits near the middle.
 const X_ORDER = [
-  "auth", "api", "prism", "agents", "ts", "ux",
-  "mongo", "node", "resources", "kyle", "vibe",
-  "react", "next", "surf", "vite", "unity", "js", "html", "css",
+  "aws", "sjsu", "python", "mcp", "secretary", "auth", "api", "prism",
+  "agents", "comanager", "git", "ts", "kyle", "node", "mongo", "ux",
+  "react", "next", "vite", "unity", "js", "html", "css",
 ];
 const X_SPREAD = 12.0;
 const X_ANCHORS = new Float32Array(NODES.length);

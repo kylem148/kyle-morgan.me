@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState, type RefObject } from "react";
+import { useCallback, useState, type RefObject } from "react";
 import SectionRail from "../ui/SectionRail";
 import ProjectRow from "../ui/ProjectRow";
-import ProjectPoster from "../ui/ProjectPoster";
+import ProjectPoster, { POSTER } from "../ui/ProjectPoster";
 import { PROJECTS, type Project } from "@/content/projects";
+import { useCursorFollow } from "@/lib/useCursorFollow";
 
 type Props = {
   // Ref shared with <GraphScene/> so hovering a row highlights its subgraph.
@@ -13,29 +14,31 @@ type Props = {
 
 export default function Works({ hoverIdRef }: Props) {
   const [hoverProject, setHoverProject] = useState<Project | null>(null);
-  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+  // The poster keeps its last project while fading out. `instant` skips the
+  // crossfade when it was fully hidden, so a stale image never flashes in.
+  const [poster, setPoster] = useState({ project: PROJECTS[0], instant: true });
+  const { ref: posterRef, show, hide } = useCursorFollow<HTMLDivElement>({
+    width: POSTER.width,
+    height: POSTER.height,
+    offset: 24,
+    hideMs: POSTER.fadeMs,
+  });
 
   const handleEnter = useCallback(
     (p: Project, pos?: { x: number; y: number }) => {
       hoverIdRef.current = p.graphId;
-      if (pos) setCursor(pos);
+      const instant = show(pos);
+      setPoster({ project: p, instant });
       setHoverProject(p);
     },
-    [hoverIdRef],
+    [hoverIdRef, show],
   );
 
   const handleLeave = useCallback(() => {
     hoverIdRef.current = null;
+    hide();
     setHoverProject(null);
-  }, [hoverIdRef]);
-
-  useEffect(() => {
-    if (!hoverProject) return;
-    const onMove = (e: PointerEvent) =>
-      setCursor({ x: e.clientX, y: e.clientY });
-    window.addEventListener("pointermove", onMove);
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [hoverProject]);
+  }, [hoverIdRef, hide]);
 
   return (
     <>
@@ -44,14 +47,8 @@ export default function Works({ hoverIdRef }: Props) {
         className="grid grid-cols-12 border-t border-[#0f0e0c] bg-[#f2efe8]"
         onPointerLeave={handleLeave}
       >
-        <SectionRail label="§ 02 — Works" />
+        <SectionRail label="Works" />
         <div className="col-span-11 p-6">
-          <div className="hidden md:grid grid-cols-[1fr_3fr_2fr_2fr] gap-4 border-b border-[#0f0e0c] py-3 text-[11px] uppercase tracking-[0.1em]">
-            <div>Index</div>
-            <div>Project</div>
-            <div>Category</div>
-            <div className="text-right">Link</div>
-          </div>
           {PROJECTS.map((p) => (
             <ProjectRow
               key={p.id}
@@ -64,22 +61,13 @@ export default function Works({ hoverIdRef }: Props) {
         </div>
       </section>
 
-      {hoverProject && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed z-30 hidden md:block"
-          style={{
-            left: cursor.x,
-            top: cursor.y,
-            transform:
-              cursor.x + 320 > window.innerWidth
-                ? "translate(calc(-100% - 24px), -50%)"
-                : "translate(24px, -50%)",
-          }}
-        >
-          <ProjectPoster project={hoverProject} />
-        </div>
-      )}
+      <ProjectPoster
+        ref={posterRef}
+        projects={PROJECTS}
+        active={poster.project}
+        visible={hoverProject !== null}
+        instant={poster.instant}
+      />
     </>
   );
 }
