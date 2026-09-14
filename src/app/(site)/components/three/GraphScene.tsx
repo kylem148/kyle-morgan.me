@@ -385,14 +385,15 @@ export default function GraphScene({ progressRef, heroRef }: Props) {
     };
   }, [progressRef, heroRef]);
 
-  // Sized with svh instead of bottom-0 so the box, and the canvas in it, keeps
-  // its size when a mobile browser's toolbar collapses or expands. The strip it
-  // leaves uncovered at the bottom is behind the opaque sections by then.
+  // Sized from the pinned --svh/--lvh instead of bottom-0 so the box, and the
+  // canvas in it, keeps its size when a mobile browser's toolbar collapses or
+  // expands. The strip it leaves uncovered at the bottom is behind the opaque
+  // sections by then.
   return (
     <div
       ref={mountRef}
       aria-hidden="true"
-      className="graph-mask pointer-events-none fixed inset-x-0 top-[42lvh] h-[calc(100svh-42lvh)] z-0 md:top-0 md:h-svh"
+      className="graph-mask pointer-events-none fixed inset-x-0 top-[calc(42*var(--lvh))] h-[calc(100*var(--svh)-42*var(--lvh))] z-0 md:top-0 md:h-[calc(100*var(--svh))]"
     />
   );
 }

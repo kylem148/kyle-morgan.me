@@ -10,8 +10,10 @@ import CurrentFocus from "./sections/CurrentFocus";
 import Contact from "./sections/Contact";
 import GraphScene from "./three/GraphScene";
 import { useScrollProgress } from "@/lib/useScrollProgress";
+import { useStableViewportUnits } from "@/lib/useStableViewportUnits";
 
 export default function PersonalSite() {
+  useStableViewportUnits();
   const progressRef = useScrollProgress();
 
   // <GraphScene/> only renders while the hero it shows through is on screen.

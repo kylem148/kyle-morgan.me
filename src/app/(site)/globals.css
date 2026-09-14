@@ -3,6 +3,10 @@
 :root {
   --background: #f2efe8;
   --foreground: #0f0e0c;
+  /* 1svh and 1lvh. useStableViewportUnits pins these to pixels so a mobile
+     browser that resizes the page when its toolbar hides can't move layout. */
+  --svh: 1svh;
+  --lvh: 1lvh;
 }
 
 @theme inline {
